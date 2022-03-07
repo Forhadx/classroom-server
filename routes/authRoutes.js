@@ -21,7 +21,7 @@ router.post(
           }
         });
       }),
-    body("password", "password is required").trim().isLength({ min: 6 }),
+    body("password", "password is required").trim().isLength({ min: 4 }),
     body("name", "enter your name").trim().notEmpty(),
     body("image", "upload facult image"),
   ],

@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const sequelizeDb = require("./util/database");
+
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const teamRoutes = require("./routes/teamRoutes");
@@ -28,7 +29,24 @@ Room.hasMany(Attendance);
 Student.belongsToMany(Attendance, { through: AttendanceList });
 Attendance.belongsToMany(Student, { through: AttendanceList });
 
-sequelizeDb.sync();
+// sequelizeDb
+//   .authenticate()
+//   .then(() => {
+//     console.log("Connection has been established successfully.");
+//   })
+//   .catch((err) => {
+//     console.error("Unable to connect to the database:", err);
+//   });
+
+sequelizeDb
+  .sync()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
 // sequelizeDb.sync({ force: true });
 
 const app = express();
@@ -50,6 +68,12 @@ app.use("/", authRoutes);
 app.use("/", roomRoutes);
 app.use("/", teamRoutes);
 app.use("/", attendanceRoutes);
+
+app.use((error, req, res, next) => {
+  res
+    .status(error.staus || 500)
+    .json({ message: error.message || "An unknown error occured!" });
+});
 
 app.listen(8000);
 console.log("start At 8000");
