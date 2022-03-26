@@ -40,6 +40,7 @@ Attendance.belongsToMany(Student, { through: AttendanceList });
 
 sequelizeDb
   .sync()
+  // .sync({ force: true })
   .then(() => {
     console.log("Connection has been established successfully.");
   })
@@ -69,11 +70,26 @@ app.use("/", roomRoutes);
 app.use("/", teamRoutes);
 app.use("/", attendanceRoutes);
 
-app.use((error, req, res, next) => {
-  res
-    .status(error.staus || 500)
-    .json({ message: error.message || "An unknown error occured!" });
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Could not find this page." });
 });
 
-app.listen(8000);
-console.log("start At 8000");
+// app.use((error, req, res, next) => {
+//   if (req.file) {
+//     fs.unlink(req.file.path, (err) => {
+//       console.log(err);
+//     });
+//   }
+//   if (res.headerSent) {
+//     return next(error);
+//   }
+
+//   res
+//     .status(error.code || 500)
+//     .json({ message: error.message || "An unknown error occurred!" });
+// });
+
+let PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`start At ${PORT}`);
+});

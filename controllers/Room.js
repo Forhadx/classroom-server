@@ -3,28 +3,29 @@ const { validationResult } = require("express-validator");
 const { nanoid } = require("nanoid");
 
 exports.addRoom = async (req, res, next) => {
-  //   console.log("rooM: ", req.faculty);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("Validator Error!");
-    error.statusCode = 422;
-    console.log(errors.array());
-    error.data = errors.array();
-    throw error;
+    return res.status(422).json({ message: errors.array()[0].msg });
   }
 
   try {
-    const name = req.body.name;
+    const { roomName } = req.body;
     const room = await req.faculty.createRoom({
-      name: name,
-      token: nanoid(6),
+      roomName: roomName,
+      roomCode: nanoid(6),
     });
     if (!room) {
       console.log('room couldn"t be created');
     }
     await room.createTeam();
-    res.json({ message: "room create successfully" });
+    res.json({
+      message: "room create successfully",
+      roomName: room.roomName,
+      roomCode: room.roomCode,
+    });
   } catch (err) {
-    console.log(err);
+    return res
+      .status(500)
+      .json({ message: "Couldn't add new room. Try again!" });
   }
 };

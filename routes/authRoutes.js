@@ -16,7 +16,6 @@ router.post(
       .custom((value, { req }) => {
         return Faculty.findOne({ where: { email: value } }).then((faculty) => {
           if (faculty) {
-            console.log("entry");
             return Promise.reject("email already exist");
           }
         });
@@ -43,7 +42,6 @@ router.post(
       .custom((value, { req }) => {
         return Student.findOne({ where: { email: value } }).then((student) => {
           if (student) {
-            console.log("entry");
             return Promise.reject("email already exist");
           }
         });

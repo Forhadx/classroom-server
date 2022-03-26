@@ -10,10 +10,7 @@ const keys = require("../config/keys");
 exports.facultySignup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("validation failed.");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
+    return res.status(422).json({ message: errors.array()[0].msg });
   }
 
   try {
@@ -31,17 +28,14 @@ exports.facultySignup = async (req, res, next) => {
     });
     res.json({ message: "Faculty added" });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ message: "Couldn't signup now. Try again." });
   }
 };
 
 exports.facultyLogin = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("Validator Error during login");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
+    return res.status(422).json({ message: errors.array()[0].msg });
   }
 
   try {
@@ -70,7 +64,7 @@ exports.facultyLogin = async (req, res, next) => {
       expiresIn: "30d",
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ message: "Couldn't login now. Try again." });
   }
 };
 
@@ -78,10 +72,7 @@ exports.facultyLogin = async (req, res, next) => {
 exports.studentSignup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("validation failed.");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
+    return res.status(422).json({ message: errors.array()[0].msg });
   }
 
   try {
@@ -99,17 +90,14 @@ exports.studentSignup = async (req, res, next) => {
     });
     res.json({ message: "Faculty added" });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ message: "Couldn't signup now. Try again." });
   }
 };
 
 exports.studntLogin = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("Validator Error during login");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
+    return res.status(422).json({ message: errors.array()[0].msg });
   }
 
   try {
@@ -138,6 +126,6 @@ exports.studntLogin = async (req, res, next) => {
       expiresIn: "30d",
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ message: "Couldn't login now. Try again." });
   }
 };

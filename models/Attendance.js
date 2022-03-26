@@ -9,10 +9,6 @@ const Attendance = sequelizeDb.define("attendance", {
     allowNull: false,
     primaryKey: true,
   },
-  date: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
 });
 
 module.exports = Attendance;

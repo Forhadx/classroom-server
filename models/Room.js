@@ -9,11 +9,11 @@ const Room = sequelizeDb.define("room", {
     allowNull: false,
     primaryKey: true,
   },
-  name: {
+  roomName: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  token: {
+  roomCode: {
     type: Sequelize.STRING,
     allowNull: false,
   },
