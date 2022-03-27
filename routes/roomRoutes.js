@@ -18,12 +18,14 @@ router.post(
           where: { roomName: value, facultyId: req.faculty.id },
         }).then((room) => {
           if (room) {
-            return Promise.reject("room already exists.");
+            return Promise.reject("room name already exists.");
           }
         });
       }),
   ],
   teamController.addRoom
 );
+
+router.get("/api/f/rooms", teamController.getAllRooms);
 
 module.exports = router;
