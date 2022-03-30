@@ -19,7 +19,6 @@ const fileStorage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  console.log("file type: ", file.mimetype);
   const isValid = !!MIME_TYPE_MAP[file.mimetype];
   let error = isValid ? null : new Error("Invalid mime type");
   cb(error, isValid);

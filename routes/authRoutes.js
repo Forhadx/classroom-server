@@ -4,11 +4,13 @@ const { body } = require("express-validator");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const authController = require("../controllers/auth");
+const fileUpload = require("../middleware/fileUrl");
 
 const router = express.Router();
 
 router.post(
   "/api/f/signup",
+  fileUpload.single("image"),
   [
     body("email", "enter a valid email")
       .isEmail()
@@ -22,7 +24,6 @@ router.post(
       }),
     body("password", "password is required").trim().isLength({ min: 4 }),
     body("name", "enter your name").trim().notEmpty(),
-    body("image", "upload facult image"),
   ],
   authController.facultySignup
 );
@@ -35,10 +36,11 @@ router.post(
 
 router.post(
   "/api/s/signup",
+  fileUpload.single("image"),
   [
     body("email", "enter a valid email")
-      .isEmail()
-      .normalizeEmail()
+      // .isEmail()
+      // .normalizeEmail()
       .custom((value, { req }) => {
         return Student.findOne({ where: { email: value } }).then((student) => {
           if (student) {
@@ -48,7 +50,6 @@ router.post(
       }),
     body("password", "password is required").trim().isLength({ min: 6 }),
     body("name", "enter your name").trim().notEmpty(),
-    body("image", "upload facult image"),
   ],
   authController.studentSignup
 );

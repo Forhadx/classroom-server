@@ -14,21 +14,28 @@ exports.facultySignup = async (req, res, next) => {
   }
 
   try {
+    let imageUrl = "";
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
-    const image = req.body.image;
+    // const image = req.body.image;
     const hashPw = await bcrypt.hash(password, 12);
+    if (!req.file) {
+      res.status(422).res({ json: "Faculty image not found!" });
+    }
+    imageUrl = req.file.path.replace(/\\/g, "/");
 
     await Faculty.create({
       email: email,
       password: hashPw,
       name: name,
-      image: image,
+      image: imageUrl,
     });
-    res.json({ message: "Faculty added" });
+    res.status(201).json({ message: "Faculty added" });
   } catch (err) {
-    res.status(500).json({ message: "Couldn't signup now. Try again." });
+    res
+      .status(500)
+      .json({ message: "Faculty couldn't signup now. Try again." });
   }
 };
 
@@ -43,11 +50,11 @@ exports.facultyLogin = async (req, res, next) => {
     const password = req.body.password;
     const faculty = await Faculty.findOne({ where: { email: email } });
     if (!faculty) {
-      console.log("not found");
+      res.status(422).json({ message: "Faculty not found!" });
     }
     const isEqual = await bcrypt.compare(password, faculty.password);
     if (!isEqual) {
-      console.log("wrong password");
+      res.status(409).json({ message: "Faculty password not match!" });
     }
     const token = jwt.sign(
       {
@@ -57,14 +64,14 @@ exports.facultyLogin = async (req, res, next) => {
       keys.jwtSecret,
       { expiresIn: "30d" }
     );
-    res.json({
-      message: "login successfully",
+    res.status(200).json({
+      message: "Faculty login successfully",
       token: token,
       facultyId: faculty.id,
       expiresIn: "30d",
     });
   } catch (err) {
-    res.status(500).json({ message: "Couldn't login now. Try again." });
+    res.status(500).json({ message: "Faculty couldn't login now. Try again." });
   }
 };
 
@@ -76,21 +83,30 @@ exports.studentSignup = async (req, res, next) => {
   }
 
   try {
+    console.log("req.body ", req.body);
+    let imageUrl = "";
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
-    const image = req.body.image;
+    // const image = req.body.image;
     const hashPw = await bcrypt.hash(password, 12);
+
+    if (!req.file) {
+      res.status(422).res({ json: "Student image not found!" });
+    }
+    imageUrl = req.file.path.replace(/\\/g, "/");
 
     await Student.create({
       email: email,
       password: hashPw,
       name: name,
-      image: image,
+      image: imageUrl,
     });
-    res.json({ message: "Faculty added" });
+    res.status(201).json({ message: "Student added" });
   } catch (err) {
-    res.status(500).json({ message: "Couldn't signup now. Try again." });
+    res
+      .status(500)
+      .json({ message: "Student couldn't signup now. Try again." });
   }
 };
 
@@ -105,11 +121,11 @@ exports.studntLogin = async (req, res, next) => {
     const password = req.body.password;
     const student = await Student.findOne({ where: { email: email } });
     if (!student) {
-      console.log("not found");
+      res.status(422).json({ message: "Student not found!" });
     }
     const isEqual = await bcrypt.compare(password, student.password);
     if (!isEqual) {
-      console.log("wrong password");
+      res.status(409).json({ message: "Student password not match!" });
     }
     const token = jwt.sign(
       {
@@ -119,13 +135,13 @@ exports.studntLogin = async (req, res, next) => {
       keys.jwtSecret,
       { expiresIn: "30d" }
     );
-    res.json({
-      message: "login successfully",
+    res.status(200).json({
+      message: "Student login successfully",
       token: token,
       studentId: student.id,
       expiresIn: "30d",
     });
   } catch (err) {
-    res.status(500).json({ message: "Couldn't login now. Try again." });
+    res.status(500).json({ message: "Student couldn't login now. Try again." });
   }
 };

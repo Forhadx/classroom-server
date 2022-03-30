@@ -9,6 +9,9 @@ const TeamList = sequelize.define("teamList", {
     allowNull: false,
     primaryKey: true,
   },
+  isAccept: {
+    type: Sequelize.BOOLEAN,
+  },
 });
 
 module.exports = TeamList;
