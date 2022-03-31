@@ -1,5 +1,5 @@
 ### Under Developing
 
-frontend code [link](https://github.com/Forhadx/Classroom-frontend)
+FRONTEND CODE: [link](https://github.com/Forhadx/Classroom-frontend)
 
-Live link: https://classroom-frontend-forhadx.vercel.app/
+LIVE DEMO: https://classroom-frontend-forhadx.vercel.app/

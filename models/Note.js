@@ -10,7 +10,8 @@ const Note = sequelize.define("note", {
     primaryKey: true,
   },
   post: {
-    type: Sequelize.STRING(1234),
+    // type: Sequelize.STRING(1234),
+    type: Sequelize.TEXT,
   },
   file: {
     type: Sequelize.STRING,

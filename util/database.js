@@ -1,5 +1,7 @@
 const Sequelize = require("sequelize");
 
+// console.log(process.env);
+
 const sequelizeDb = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -16,6 +18,7 @@ const sequelizeDb = new Sequelize(
 //   "xObNRGQg5YLxRSMzxYCr",
 //   {
 //     dialect: "mysql",
+//     port: 3306,
 //     host: "bqlfrop78volwwppwwbm-mysql.services.clever-cloud.com",
 //   }
 // );
