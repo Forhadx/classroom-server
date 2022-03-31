@@ -5,8 +5,8 @@ const TeamList = require("../models/Team-list");
 exports.studentRequesToAddTeam = async (req, res, next) => {
   try {
     const roomCode = req.body.roomCode;
-    // const studentId = req.body.studentId;
-    const studentId = 1;
+    const studentId = req.body.studentId;
+    // const studentId = 1;
     const room = await Room.findAll({ where: { roomCode: roomCode } });
     if (!room) {
       return res.status(422).json({ message: "Room not found!" });
@@ -15,7 +15,9 @@ exports.studentRequesToAddTeam = async (req, res, next) => {
     if (!team) {
       return res.status(422).json({ message: "Team not found!" });
     }
-    const student = await TeamList.findAll({ where: { studentId: studentId } });
+    const student = await TeamList.findAll({
+      where: { teamId: team.id, studentId: studentId },
+    });
     if (student[0]) {
       return res
         .status(409)
@@ -37,9 +39,18 @@ exports.studentRequesToAddTeam = async (req, res, next) => {
 // Faculty
 exports.acceptStudentForTeam = async (req, res, next) => {
   try {
+    const roomCode = req.body.roomCode;
     const studentId = req.body.studentId;
+    const room = await Room.findAll({ where: { roomCode: roomCode } });
+    if (!room) {
+      return res.status(422).json({ message: "Room not found!" });
+    }
+    const team = await room[0].getTeam();
+    if (!team) {
+      return res.status(422).json({ message: "Team not found!" });
+    }
     const teamStudent = await TeamList.findAll({
-      where: { studentId: studentId },
+      where: { teamId: team.id, studentId: studentId },
     });
     if (!teamStudent) {
       res.status(422).json({ message: "Student request not found in room" });
@@ -56,7 +67,7 @@ exports.acceptStudentForTeam = async (req, res, next) => {
   }
 };
 
-exports.removeStudentRequestForTeam = async (req, res, next) => {
+exports.removeStudentForTeam = async (req, res, next) => {
   try {
     const studentId = req.body.studentId;
     const student = await TeamList.findAll({ where: { studentId: studentId } });
@@ -79,15 +90,18 @@ exports.FetchAllRoomStudents = async (req, res, next) => {
     if (!room) {
       return res.status(422).json({ message: "Room not found!" });
     }
-    const team = await room[0].getTeam();
-    if (!team) {
+    const roomStudents = await room[0].getTeam({
+      // where: { isAccept: true },
+      include: ["students"],
+    });
+    if (!roomStudents) {
       return res.status(422).json({ message: "Team not found!" });
     }
 
-    const roomStudents = await TeamList.findAll({ where: { teamId: team.id } });
-    if (!roomStudents) {
-      res.status(422).json({ message: "Couldn't fetch room students!" });
-    }
+    // const roomStudents = await TeamList.findAll({ where: { teamId: team.id } });
+    // if (!roomStudents) {
+    //   res.status(422).json({ message: "Couldn't fetch room students!" });
+    // }
 
     res.status(200).json({
       message: "Fetch all room Student successfully",

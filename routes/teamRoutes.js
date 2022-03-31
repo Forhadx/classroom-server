@@ -23,12 +23,12 @@ router.post(
 router.post(
   "/api/f/team/remove",
   facultyAuth,
-  teamController.removeStudentRequestForTeam
+  teamController.removeStudentForTeam
 );
 
 router.post(
   "/api/f/team/students",
-  facultyAuth,
+  // facultyAuth,
   teamController.FetchAllRoomStudents
 );
 
