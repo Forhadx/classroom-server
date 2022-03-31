@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
-const keys = require("../config/keys");
 
 //========= FACULTY ==============
 exports.facultySignup = async (req, res, next) => {
@@ -18,10 +17,9 @@ exports.facultySignup = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
-    // const image = req.body.image;
     const hashPw = await bcrypt.hash(password, 12);
     if (!req.file) {
-      res.status(422).res({ json: "Faculty image not found!" });
+      return res.status(422).res({ json: "Faculty image not found!" });
     }
     imageUrl = req.file.path.replace(/\\/g, "/");
 
@@ -50,18 +48,18 @@ exports.facultyLogin = async (req, res, next) => {
     const password = req.body.password;
     const faculty = await Faculty.findOne({ where: { email: email } });
     if (!faculty) {
-      res.status(422).json({ message: "Faculty not found!" });
+      return res.status(422).json({ message: "Faculty not found!" });
     }
     const isEqual = await bcrypt.compare(password, faculty.password);
     if (!isEqual) {
-      res.status(409).json({ message: "Faculty password not match!" });
+      return res.status(409).json({ message: "Faculty password not match!" });
     }
     const token = jwt.sign(
       {
         email: email,
         facultyId: faculty.id,
       },
-      keys.jwtSecret,
+      process.env.TOKEN_KEY,
       { expiresIn: "30d" }
     );
     res.status(200).json({
@@ -92,7 +90,7 @@ exports.studentSignup = async (req, res, next) => {
     const hashPw = await bcrypt.hash(password, 12);
 
     if (!req.file) {
-      res.status(422).res({ json: "Student image not found!" });
+      return res.status(422).res({ json: "Student image not found!" });
     }
     imageUrl = req.file.path.replace(/\\/g, "/");
 
@@ -121,18 +119,18 @@ exports.studntLogin = async (req, res, next) => {
     const password = req.body.password;
     const student = await Student.findOne({ where: { email: email } });
     if (!student) {
-      res.status(422).json({ message: "Student not found!" });
+      return res.status(422).json({ message: "Student not found!" });
     }
     const isEqual = await bcrypt.compare(password, student.password);
     if (!isEqual) {
-      res.status(409).json({ message: "Student password not match!" });
+      return res.status(409).json({ message: "Student password not match!" });
     }
     const token = jwt.sign(
       {
         email: email,
         studentId: student.id,
       },
-      keys.jwtSecret,
+      process.env.TOKEN_KEY,
       { expiresIn: "30d" }
     );
     res.status(200).json({

@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const sequelizeDb = require("./util/database");
 
@@ -62,15 +63,15 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/uploads", express.static(path.join("uploads")));
 
-app.use(async (req, res, next) => {
-  try {
-    const faculty = await Faculty.findByPk(1);
-    req.faculty = faculty;
-    next();
-  } catch (err) {
-    console.log(err);
-  }
-});
+// app.use(async (req, res, next) => {
+//   try {
+//     const faculty = await Faculty.findByPk(1);
+//     req.faculty = faculty;
+//     next();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 app.use("/", authRoutes);
 app.use("/", roomRoutes);
@@ -97,7 +98,9 @@ app.use((req, res, next) => {
 //     .json({ message: error.message || "An unknown error occurred!" });
 // });
 
-let PORT = process.env.PORT || 8000;
+// console.log("dot: ", process.env);
+
+let PORT = process.env.PORT || process.env.API_PORT;
 app.listen(PORT, () => {
   console.log(`start At ${PORT}`);
 });

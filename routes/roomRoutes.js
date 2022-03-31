@@ -3,11 +3,13 @@ const { body } = require("express-validator");
 
 const Room = require("../models/Room");
 const teamController = require("../controllers/Room");
+const facultyAuth = require("../middleware/faculty-auth");
 
 const router = express.Router();
 
 router.post(
   "/api/f/room",
+  facultyAuth,
   [
     body("roomName", "must have room name")
       .trim()
@@ -26,6 +28,6 @@ router.post(
   teamController.addRoom
 );
 
-router.get("/api/f/rooms", teamController.getAllRooms);
+router.get("/api/f/rooms", facultyAuth, teamController.getAllRooms);
 
 module.exports = router;
