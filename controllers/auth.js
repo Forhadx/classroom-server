@@ -81,7 +81,7 @@ exports.studentSignup = async (req, res, next) => {
   }
 
   try {
-    console.log("req.body ", req.body);
+    // console.log("req.body ", req.body);
     let imageUrl = "";
     const email = req.body.email;
     const password = req.body.password;

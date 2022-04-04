@@ -98,11 +98,6 @@ exports.FetchAllRoomStudents = async (req, res, next) => {
       return res.status(422).json({ message: "Team not found!" });
     }
 
-    // const roomStudents = await TeamList.findAll({ where: { teamId: team.id } });
-    // if (!roomStudents) {
-    //   res.status(422).json({ message: "Couldn't fetch room students!" });
-    // }
-
     res.status(200).json({
       message: "Fetch all room Student successfully",
       roomStudents: roomStudents,

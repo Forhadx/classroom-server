@@ -28,7 +28,7 @@ router.post(
 
 router.post(
   "/api/f/team/students",
-  // facultyAuth,
+  facultyAuth,
   teamController.FetchAllRoomStudents
 );
 

@@ -2,6 +2,11 @@ const Room = require("../models/Room");
 const { validationResult } = require("express-validator");
 const { nanoid } = require("nanoid");
 
+const Team = require("../models/Team");
+const TeamList = require("../models/Team-list");
+const Student = require("../models/Student");
+
+// FACULTY
 exports.addRoom = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -40,6 +45,37 @@ exports.getAllRooms = async (req, res, next) => {
     res
       .status(200)
       .json({ message: "Fetch all rooms successfully", rooms: rooms });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Couldn't fetch all rooms. Try again!" });
+  }
+};
+
+// STUDENT
+
+exports.getAllStudentRooom = async (req, res, next) => {
+  try {
+    // const team = await Team.findAll({
+    //   include: Student,
+    // });
+
+    // const team = await Team.findAll({
+    //   include: [
+    //     {
+    //       // model: "teamList",
+    //       // include: ["team", "student"],
+    //       model: TeamList,
+    //       include: [Team, Student],
+    //     },
+    //   ],
+    // });
+
+    const student = await Student.findOne({
+      where: { id: 1 },
+      include: Team,
+    });
+    res.json({ message: "all team", student: student });
   } catch (err) {
     return res
       .status(500)

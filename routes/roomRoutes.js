@@ -30,4 +30,6 @@ router.post(
 
 router.get("/api/f/rooms", facultyAuth, teamController.getAllRooms);
 
+router.get("/forhad", teamController.getAllStudentRooom);
+
 module.exports = router;
