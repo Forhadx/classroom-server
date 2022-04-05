@@ -36,15 +36,6 @@ Attendance.belongsToMany(Student, { through: AttendanceList });
 Room.hasMany(Note);
 Note.belongsTo(Room, { constraints: true, onDelete: "CASCADE" });
 
-// sequelizeDb
-//   .authenticate()
-//   .then(() => {
-//     console.log("Connection has been established successfully.");
-//   })
-//   .catch((err) => {
-//     console.error("Unable to connect to the database:", err);
-//   });
-
 sequelizeDb
   .sync()
   // .sync({ force: true })
@@ -55,23 +46,11 @@ sequelizeDb
     console.error("Unable to connect to the database:", err);
   });
 
-// sequelizeDb.sync({ force: true });
-
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/uploads", express.static(path.join("uploads")));
-
-// app.use(async (req, res, next) => {
-//   try {
-//     const faculty = await Faculty.findByPk(1);
-//     req.faculty = faculty;
-//     next();
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
 
 app.use("/", authRoutes);
 app.use("/", roomRoutes);
@@ -83,22 +62,14 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Could not find this page." });
 });
 
-// app.use((error, req, res, next) => {
-//   if (req.file) {
-//     fs.unlink(req.file.path, (err) => {
-//       console.log(err);
-//     });
-//   }
-//   if (res.headerSent) {
-//     return next(error);
-//   }
+// setTimeout(function () {
+//   throw new Error("We crashed!!!!!");
+// }, 5);
 
-//   res
-//     .status(error.code || 500)
-//     .json({ message: error.message || "An unknown error occurred!" });
+// process.on("unhandledRejection", (error, promise) => {
+//   console.log("Alert! ERROR : ", error);
+//   process.exit(1); // Exit your app
 // });
-
-// console.log("dot: ", process.env);
 
 let PORT = process.env.PORT || process.env.API_PORT;
 app.listen(PORT, () => {
