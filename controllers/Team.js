@@ -57,9 +57,7 @@ exports.acceptStudentForTeam = async (req, res, next) => {
     }
     teamStudent[0].isAccept = true;
     await teamStudent[0].save();
-    res
-      .status(201)
-      .json({ message: "Student add to room", teamStudent: teamStudent[0] });
+    res.status(201).json({ message: "Student add to room" });
   } catch (err) {
     res
       .status(500)
@@ -83,28 +81,39 @@ exports.removeStudentForTeam = async (req, res, next) => {
   }
 };
 
-exports.FetchAllRoomStudents = async (req, res, next) => {
+exports.FetchAllTeamStudents = async (req, res, next) => {
   try {
     const roomCode = req.body.roomCode;
     const room = await Room.findAll({ where: { roomCode: roomCode } });
     if (!room) {
       return res.status(422).json({ message: "Room not found!" });
     }
-    const roomStudents = await room[0].getTeam({
-      // where: { isAccept: true },
+    const teamDetails = await room[0].getTeam({
       include: ["students"],
     });
-    if (!roomStudents) {
+    if (!teamDetails) {
       return res.status(422).json({ message: "Team not found!" });
     }
 
+    let teamStudents = [];
+    let teamRequestStudents = [];
+
+    for (let key in teamDetails.students) {
+      if (teamDetails.students[key].teamList.isAccept) {
+        teamStudents.push(teamDetails.students[key]);
+      } else {
+        teamRequestStudents.push(teamDetails.students[key]);
+      }
+    }
+
     res.status(200).json({
-      message: "Fetch all room Student successfully",
-      roomStudents: roomStudents,
+      message: "Fetch all Team Student successfully",
+      teamStudents: teamStudents,
+      teamRequestStudents: teamRequestStudents,
     });
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Couldn't not remove student. try again!" });
+      .json({ message: "Couldn't not fetch students. try again!" });
   }
 };

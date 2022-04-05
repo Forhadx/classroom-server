@@ -29,7 +29,7 @@ router.post(
 router.post(
   "/api/f/team/students",
   facultyAuth,
-  teamController.FetchAllRoomStudents
+  teamController.FetchAllTeamStudents
 );
 
 module.exports = router;
