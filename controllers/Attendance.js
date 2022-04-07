@@ -1,24 +1,19 @@
 const Room = require("../models/Room");
-const Student = require("../models/Student");
-
-exports.addNewAttendance = async (req, res, next) => {
-  const room = await Room.findAll({ where: { id: 1 } });
-  console.log("r: ", room[0].name);
-  await room[0].createAttendance({ date: "day 1" });
-};
+const AttendanceList = require("../models/AttendanceList");
 
 exports.markAllStdentAttendance = async (req, res, next) => {
-  const { studentIds } = req.body;
-  console.log(studentIds);
-  const room = await Room.findAll({ where: { id: 1 } });
-  attendance = await room[0].getAttendances();
-  console.log(attendance);
-  const student = await Student.findByPk(1);
+  console.log("entry--");
+  const { studentList, roomCode } = req.body;
+  const room = await Room.findAll({ where: { roomCode: roomCode } });
+  let attendance = await room[0].createAttendance();
 
-  student.attendanceList = { isAttend: true };
-  // console.log("std: ", student);
-  await attendance[0].addStudent(student);
+  for (let key in studentList) {
+    await AttendanceList.create({
+      studentId: studentList[key].id,
+      isAttend: studentList[key].isAttend,
+      attendanceId: attendance.id,
+    });
+  }
 
   res.json({ message: "add succesfully?" });
-  // console.log(attendance);
 };
