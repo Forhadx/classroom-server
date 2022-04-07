@@ -62,15 +62,6 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Could not find this page." });
 });
 
-// setTimeout(function () {
-//   throw new Error("We crashed!!!!!");
-// }, 5);
-
-// process.on("unhandledRejection", (error, promise) => {
-//   console.log("Alert! ERROR : ", error);
-//   process.exit(1); // Exit your app
-// });
-
 let PORT = process.env.PORT || process.env.API_PORT;
 app.listen(PORT, () => {
   console.log(`start At ${PORT}`);

@@ -5,12 +5,12 @@ const facultyAuth = require("../middleware/faculty-auth");
 
 const router = express.Router();
 
-// router.post("/api/f/attendance", attendanceController.addNewAttendance);
-
 router.post(
   "/api/f/attendance/mark",
   facultyAuth,
   attendanceController.markAllStdentAttendance
 );
+
+router.post("/api/f/attendance", attendanceController.getAllRoomAttendances);
 
 module.exports = router;
