@@ -3,10 +3,11 @@ const express = require("express");
 const fileUpload = require("../middleware/fileUrl");
 const noteController = require("../controllers/Note");
 const facultyAuth = require("../middleware/faculty-auth");
+const studentAuth = require("../middleware/student-auth");
 
 const router = express.Router();
 
-//FACULTY
+//========== FACULTY ==========
 router.post(
   "/api/f/note",
   facultyAuth,
@@ -22,6 +23,13 @@ router.get(
   noteController.downloadNotePdf
 );
 
-//STUDENT
+//========= STUDENT =========
+router.post("/api/s/notes", studentAuth, noteController.fetchAllNotes);
+
+router.get(
+  "/api/s/note/download/:id",
+  studentAuth,
+  noteController.downloadNotePdf
+);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const { body } = require("express-validator");
 const Room = require("../models/Room");
 const teamController = require("../controllers/Room");
 const facultyAuth = require("../middleware/faculty-auth");
+const studentAuth = require("../middleware/student-auth");
 
 const router = express.Router();
 
@@ -30,6 +31,6 @@ router.post(
 
 router.get("/api/f/rooms", facultyAuth, teamController.getAllRooms);
 
-router.get("/forhad", teamController.getAllStudentRooom);
+router.get("/api/s/rooms", studentAuth, teamController.getAllStudentRooom);
 
 module.exports = router;

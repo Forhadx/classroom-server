@@ -1,6 +1,7 @@
 const Room = require("../models/Room");
 const AttendanceList = require("../models/AttendanceList");
 
+// ========== FACULTY ============
 exports.markAllStdentAttendance = async (req, res, next) => {
   try {
     const { studentList, roomCode } = req.body;
@@ -43,6 +44,42 @@ exports.getAllRoomAttendances = async (req, res, next) => {
     res.status(200).json({
       message: "Fetch all Attendances list successfully!",
       attendanceList: attendanceList,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Attendace lists couldn't fetch. try again!" });
+  }
+};
+
+// ========== STUDENT ============
+exports.getStudentRoomAttendance = async (req, res, next) => {
+  try {
+    const { roomCode } = req.body;
+    const room = await Room.findAll({ where: { roomCode: roomCode } });
+    const attendanceList = await room[0].getAttendances({
+      include: ["students"],
+      order: [["createdAt", "DESC"]],
+    });
+
+    let attendanceDetails = [];
+    for (let key_1 in attendanceList) {
+      let detail = {
+        id: attendanceList[key_1].id,
+        createdAt: attendanceList[key_1].createdAt,
+      };
+      for (let key_2 in attendanceList[key_1].students) {
+        if (+attendanceList[key_1].students[key_2].id === +req.student.id) {
+          detail.isAttend =
+            attendanceList[key_1].students[key_2].attendanceList.isAttend;
+        }
+      }
+      attendanceDetails.push(detail);
+    }
+
+    res.json({
+      message: "atd lists..",
+      attendanceDetails: attendanceDetails,
     });
   } catch (err) {
     res

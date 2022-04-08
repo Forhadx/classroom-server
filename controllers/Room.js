@@ -40,7 +40,7 @@ exports.getAllRooms = async (req, res, next) => {
       order: [["updatedAt", "DESC"]],
     });
     if (!rooms) {
-      return res.status(400).json({ message: 'couldn"t be fetch all rooms' });
+      return res.status(422).json({ message: 'couldn"t be fetch all rooms' });
     }
     res
       .status(200)
@@ -56,26 +56,28 @@ exports.getAllRooms = async (req, res, next) => {
 
 exports.getAllStudentRooom = async (req, res, next) => {
   try {
-    // const team = await Team.findAll({
-    //   include: Student,
-    // });
-
-    // const team = await Team.findAll({
-    //   include: [
-    //     {
-    //       // model: "teamList",
-    //       // include: ["team", "student"],
-    //       model: TeamList,
-    //       include: [Team, Student],
-    //     },
-    //   ],
-    // });
-
-    const student = await Student.findOne({
+    let roomIds = [];
+    const studentTeamDetails = await Student.findOne({
       where: { id: 1 },
       include: Team,
     });
-    res.json({ message: "all team", student: student });
+    if (!studentTeamDetails) {
+      return res
+        .status(422)
+        .json({ message: 'Couldn"t be fetch all student teams' });
+    }
+    for (let key in studentTeamDetails.teams) {
+      roomIds.push(studentTeamDetails.teams[key].roomId);
+    }
+
+    const rooms = await Room.findAll({
+      where: { id: roomIds },
+      order: [["updatedAt", "DESC"]],
+    });
+    if (!rooms) {
+      return res.status(422).json({ message: 'couldn"t be fetch all rooms' });
+    }
+    res.status(200).json({ message: "Fetch all studen rooms", rooms: rooms });
   } catch (err) {
     return res
       .status(500)
