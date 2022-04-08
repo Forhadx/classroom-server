@@ -58,8 +58,8 @@ exports.getAllStudentRooom = async (req, res, next) => {
   try {
     let roomIds = [];
     const studentTeamDetails = await Student.findOne({
-      where: { id: 1 },
-      include: Team,
+      where: { id: req.student.id },
+      include: ["teams"],
     });
     if (!studentTeamDetails) {
       return res
@@ -67,7 +67,9 @@ exports.getAllStudentRooom = async (req, res, next) => {
         .json({ message: 'Couldn"t be fetch all student teams' });
     }
     for (let key in studentTeamDetails.teams) {
-      roomIds.push(studentTeamDetails.teams[key].roomId);
+      if (studentTeamDetails.teams[key].teamList.isAccept === true) {
+        roomIds.push(studentTeamDetails.teams[key].roomId);
+      }
     }
 
     const rooms = await Room.findAll({

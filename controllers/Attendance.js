@@ -57,10 +57,16 @@ exports.getStudentRoomAttendance = async (req, res, next) => {
   try {
     const { roomCode } = req.body;
     const room = await Room.findAll({ where: { roomCode: roomCode } });
+    if (!room) {
+      return res.status(422).json({ message: "Room not found!" });
+    }
     const attendanceList = await room[0].getAttendances({
       include: ["students"],
       order: [["createdAt", "DESC"]],
     });
+    if (!attendanceList) {
+      return res.status(422).json({ message: "Attendent list not found!" });
+    }
 
     let attendanceDetails = [];
     for (let key_1 in attendanceList) {
@@ -77,8 +83,8 @@ exports.getStudentRoomAttendance = async (req, res, next) => {
       attendanceDetails.push(detail);
     }
 
-    res.json({
-      message: "atd lists..",
+    res.status(200).json({
+      message: "Student Attendance list fetch Successfully!",
       attendanceDetails: attendanceDetails,
     });
   } catch (err) {

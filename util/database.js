@@ -1,26 +1,13 @@
 const Sequelize = require("sequelize");
 
-// console.log(process.env);
-
-// const sequelizeDb = new Sequelize(
-//   process.env.DB_NAME,
-//   process.env.DB_USER,
-//   process.env.DB_PASSWORD,
-//   {
-//     dialect: process.env.DB_DIALECT,
-//     port: 3306,
-//     host: process.env.HOST,
-//   }
-// );
-
 const sequelizeDb = new Sequelize(
-  "bqlfrop78volwwppwwbm",
-  "uddq7uuismiwiirc",
-  "xObNRGQg5YLxRSMzxYCr",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    dialect: "mysql",
-    port: 3306,
-    host: "bqlfrop78volwwppwwbm-mysql.services.clever-cloud.com",
+    dialect: process.env.DB_DIALECT,
+    port: process.env.DB_PORT,
+    host: process.env.DB_HOST,
   }
 );
 
